@@ -77,7 +77,7 @@ class TestOne extends FlatSpec with BeforeAndAfterAll with MapperTrait with Befo
         val b = ModelA(None, a.id, Option(f"root$i-sub$i2"))
         b.id = TableA.returning(TableA.map(_.id)).insert(b)
         for (i3 ← 1.to(2)) {
-          val c = ModelA(None, a.id, Option(f"root$i-sub$i2-sub$i3"))
+          val c = ModelA(None, b.id, Option(f"root$i-sub$i2-sub$i3"))
           c.id = TableA.returning(TableA.map(_.id)).insert(c)
         }
       }
@@ -139,7 +139,7 @@ class TestOne extends FlatSpec with BeforeAndAfterAll with MapperTrait with Befo
     }
 
     val compiled = Compiled(queryForMaster _)
-    val result = compiled.apply(Option("%"), Option("1,11,31")).run
+    val result = compiled.apply(Option("%"), Option("1,8,11,31,35")).run
     result.foreach(x ⇒ logger.info(x.toString))
   }
 
