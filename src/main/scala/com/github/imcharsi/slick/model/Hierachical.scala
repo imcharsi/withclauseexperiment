@@ -16,7 +16,7 @@
 package com.github.imcharsi.slick.model
 
 import scala.beans.BeanProperty
-import com.github.imcharsi.slick.{MapperTrait, DriverSetting}
+import com.github.imcharsi.slick.{ MapperTrait, DriverSetting }
 import DriverSetting.driver._
 import com.github.imcharsi.slick.withclauseexperiment.NodeChangeableTableQuery
 
@@ -24,10 +24,10 @@ import com.github.imcharsi.slick.withclauseexperiment.NodeChangeableTableQuery
  * Created by KangWoo,Lee on 14. 5. 28.
  */
 case class HierachicalModel(@BeanProperty var id: Option[Int],
-                             @BeanProperty var parentId: Option[Int],
-                             @BeanProperty var name: Option[String],
-                             @BeanProperty var odr: Option[List[Int]],
-                             @BeanProperty var depth: Option[Int])
+  @BeanProperty var parentId: Option[Int],
+  @BeanProperty var name: Option[String],
+  @BeanProperty var odr: Option[List[Int]],
+  @BeanProperty var depth: Option[Int])
 
 class HierachicalTable(tag: Tag) extends Table[HierachicalModel](tag, "with_model_a") with MapperTrait {
   def id = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)
@@ -40,7 +40,7 @@ class HierachicalTable(tag: Tag) extends Table[HierachicalModel](tag, "with_mode
 
   def depth = column[Option[Int]]("depth", O.Nullable)
 
-  override def * = (id, parentId, name, odr, depth) <>(HierachicalModel.tupled, HierachicalModel.unapply)
+  override def * = (id, parentId, name, odr, depth) <> (HierachicalModel.tupled, HierachicalModel.unapply)
 }
 
 object HierachicalTable extends NodeChangeableTableQuery[HierachicalTable](new HierachicalTable(_))

@@ -26,8 +26,8 @@ import scala.slick.ast.UnassignedStructuralType
  * Created by KangWoo,Lee on 14. 5. 26.
  */
 case class FunctionTableNode(schemaName: Option[String], tableName: String, argNode: Seq[Node],
-                             identity: TableIdentitySymbol, driverTable: Any, baseIdentity: TableIdentitySymbol,
-                             quote: Boolean, openParens: String, closeParens: String) extends NullaryNode with TypedNode {
+    identity: TableIdentitySymbol, driverTable: Any, baseIdentity: TableIdentitySymbol,
+    quote: Boolean, openParens: String, closeParens: String) extends NullaryNode with TypedNode {
   type Self = FunctionTableNode
 
   def tpe = CollectionType(TypedCollectionTypeConstructor.seq, NominalType(identity)(UnassignedStructuralType(identity)))
@@ -38,9 +38,7 @@ case class FunctionTableNode(schemaName: Option[String], tableName: String, argN
 }
 
 trait FunctionTable {
-  private def apply[E <: AbstractTable[_]]
-  (q: NodeChangeableTableQuery[E], quote: Boolean = true, openParens: String = "(", closeParens: String = ")")
-  (c: Seq[Node]): NodeChangeableTableQuery[E] = {
+  private def apply[E <: AbstractTable[_]](q: NodeChangeableTableQuery[E], quote: Boolean = true, openParens: String = "(", closeParens: String = ")")(c: Seq[Node]): NodeChangeableTableQuery[E] = {
     val tableExpansion: TableExpansion = q.toNode.asInstanceOf[TableExpansion]
     val tableNode: TableNode = tableExpansion.table.asInstanceOf[TableNode]
     val functionTableNode: FunctionTableNode = FunctionTableNode(
@@ -49,27 +47,22 @@ trait FunctionTable {
     q.changeTableExpansion(tableExpansion.copy(table = functionTableNode))
   }
 
-  def nullary[E <: AbstractTable[_]]
-  (q: NodeChangeableTableQuery[E], quote: Boolean = true, openParens: String = "(", closeParens: String = ")")
-  (): NodeChangeableTableQuery[E] = {
+  def nullary[E <: AbstractTable[_]](q: NodeChangeableTableQuery[E], quote: Boolean = true, openParens: String = "(", closeParens: String = ")")(): NodeChangeableTableQuery[E] = {
     this(q, quote, openParens, closeParens)(Nil)
   }
 
-  def unary[E <: AbstractTable[_], T1]
-  (q: NodeChangeableTableQuery[E], c1: Column[T1],
-   quote: Boolean = true, openParens: String = "(", closeParens: String = ")"): NodeChangeableTableQuery[E] = {
+  def unary[E <: AbstractTable[_], T1](q: NodeChangeableTableQuery[E], c1: Column[T1],
+    quote: Boolean = true, openParens: String = "(", closeParens: String = ")"): NodeChangeableTableQuery[E] = {
     this(q, quote, openParens, closeParens)(Seq(c1.toNode))
   }
 
-  def binary[E <: AbstractTable[_], T1, T2]
-  (q: NodeChangeableTableQuery[E], c1: Column[T1], c2: Column[T2],
-   quote: Boolean = true, openParens: String = "(", closeParens: String = ")"): NodeChangeableTableQuery[E] = {
+  def binary[E <: AbstractTable[_], T1, T2](q: NodeChangeableTableQuery[E], c1: Column[T1], c2: Column[T2],
+    quote: Boolean = true, openParens: String = "(", closeParens: String = ")"): NodeChangeableTableQuery[E] = {
     this(q, quote, openParens, closeParens)(Seq(c1.toNode, c2.toNode))
   }
 
-  def tenary[E <: AbstractTable[_], T1, T2, T3]
-  (q: NodeChangeableTableQuery[E], c1: Column[T1], c2: Column[T2], c3: Column[T3],
-   quote: Boolean = true, openParens: String = "(", closeParens: String = ")"): NodeChangeableTableQuery[E] = {
+  def tenary[E <: AbstractTable[_], T1, T2, T3](q: NodeChangeableTableQuery[E], c1: Column[T1], c2: Column[T2], c3: Column[T3],
+    quote: Boolean = true, openParens: String = "(", closeParens: String = ")"): NodeChangeableTableQuery[E] = {
     this(q, quote, openParens, closeParens)(Seq(c1.toNode, c2.toNode, c3.toNode))
   }
 }

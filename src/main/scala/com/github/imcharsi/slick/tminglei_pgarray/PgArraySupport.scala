@@ -4,7 +4,7 @@ package com.github.imcharsi.slick.tminglei_pgarray
 import java.util.UUID
 import scala.slick.lifted.Column
 import scala.slick.driver.PostgresDriver
-import java.sql.{Timestamp, Time, Date}
+import java.sql.{ Timestamp, Time, Date }
 import scala.slick.jdbc.JdbcType
 
 trait PgArraySupport extends PgArrayExtensions with PgArrayJdbcTypes {

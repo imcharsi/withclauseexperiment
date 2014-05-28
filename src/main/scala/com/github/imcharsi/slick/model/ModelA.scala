@@ -16,7 +16,7 @@
 package com.github.imcharsi.slick.model
 
 import scala.beans.BeanProperty
-import com.github.imcharsi.slick.{MapperTrait, DriverSetting}
+import com.github.imcharsi.slick.{ MapperTrait, DriverSetting }
 import DriverSetting.driver._
 import com.github.imcharsi.slick.withclauseexperiment.NodeChangeableTableQuery
 
@@ -24,8 +24,8 @@ import com.github.imcharsi.slick.withclauseexperiment.NodeChangeableTableQuery
  * Created by KangWoo,Lee on 14. 5. 18.
  */
 case class ModelA(@BeanProperty var id: Option[Int],
-                  @BeanProperty var parentId: Option[Int],
-                  @BeanProperty var name: Option[String])
+  @BeanProperty var parentId: Option[Int],
+  @BeanProperty var name: Option[String])
 
 class TableA(tag: Tag) extends Table[ModelA](tag, Option("sample"), "model_a") with MapperTrait {
   def id = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)
@@ -34,7 +34,7 @@ class TableA(tag: Tag) extends Table[ModelA](tag, Option("sample"), "model_a") w
 
   def name = column[Option[String]]("name", O.Nullable)
 
-  override def * = (id, parentId, name) <>(ModelA.tupled, ModelA.unapply)
+  override def * = (id, parentId, name) <> (ModelA.tupled, ModelA.unapply)
 
   def foreignKey1 = foreignKey(f"${tableName}_fk1", parentId, TableA)(_.id)
 }

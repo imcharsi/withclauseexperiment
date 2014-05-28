@@ -2,16 +2,16 @@
 package com.github.imcharsi.slick.tminglei_pgarray
 
 import scala.reflect.ClassTag
-import java.util.{Map ⇒ JMap}
-import scala.slick.driver.{PostgresDriver, JdbcTypesComponent}
-import java.sql.{ResultSet, PreparedStatement}
+import java.util.{ Map ⇒ JMap }
+import scala.slick.driver.{ PostgresDriver, JdbcTypesComponent }
+import java.sql.{ ResultSet, PreparedStatement }
 
 trait PgArrayJdbcTypes extends JdbcTypesComponent {
   driver: PostgresDriver ⇒
 
   class SimpleArrayListJdbcType[T](sqlBaseType: String)(
     implicit override val classTag: ClassTag[List[T]], tag: ClassTag[T])
-    extends DriverJdbcType[List[T]] {
+      extends DriverJdbcType[List[T]] {
 
     override def sqlType: Int = java.sql.Types.ARRAY
 
@@ -70,10 +70,10 @@ trait PgArrayJdbcTypes extends JdbcTypesComponent {
 
   ///-- can be used to map complex composite/nested array
   class NestedArrayListJdbcType[T](sqlBaseType: String,
-                                   fnFromString: (String ⇒ List[T]),
-                                   fnToString: (List[T] ⇒ String))(
-                                    implicit override val classTag: ClassTag[List[T]], tag: ClassTag[T])
-    extends DriverJdbcType[List[T]] {
+    fnFromString: (String ⇒ List[T]),
+    fnToString: (List[T] ⇒ String))(
+      implicit override val classTag: ClassTag[List[T]], tag: ClassTag[T])
+      extends DriverJdbcType[List[T]] {
 
     override def sqlType: Int = java.sql.Types.ARRAY
 

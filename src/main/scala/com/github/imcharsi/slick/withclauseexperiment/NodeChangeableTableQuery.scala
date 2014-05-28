@@ -23,14 +23,14 @@ import scala.slick.ast.TableNode
 /**
  * Created by KangWoo,Lee on 14. 5. 27.
  */
-class NodeChangeableTableQuery[E <: AbstractTable[_]](cons: Tag => E, n: Option[TableExpansion] = None) extends TableQuery[E](cons) {
+class NodeChangeableTableQuery[E <: AbstractTable[_]](cons: Tag ⇒ E, n: Option[TableExpansion] = None) extends TableQuery[E](cons) {
   lazy override val toNode: Node = n.getOrElse(shaped.toNode)
 
   def asWithDeclaration(n: String): NodeChangeableTableQuery[E] = {
     val tableExpansion: TableExpansion = toNode.asInstanceOf[TableExpansion]
     val tableNode = tableExpansion.table match {
-      case x: TableNode => x.copy(schemaName = None, tableName = n)
-      case x: FunctionTableNode => TableNode(None, n, x.identity, x.driverTable, x.baseIdentity)
+      case x: TableNode ⇒ x.copy(schemaName = None, tableName = n)
+      case x: FunctionTableNode ⇒ TableNode(None, n, x.identity, x.driverTable, x.baseIdentity)
     }
     new NodeChangeableTableQuery[E](cons, Option(tableExpansion.copy(table = tableNode)))
   }

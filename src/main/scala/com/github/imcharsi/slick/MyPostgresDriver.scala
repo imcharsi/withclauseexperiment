@@ -24,7 +24,7 @@ import scala.slick.ast.TableNode
 import scala.Some
 import scala.slick.ast.Comprehension
 import com.github.imcharsi.slick.tminglei_pgarray.PgArraySupport
-import com.github.imcharsi.slick.withclauseexperiment.{WithNode, SampleUnion, FunctionTableNode}
+import com.github.imcharsi.slick.withclauseexperiment.{ WithNode, SampleUnion, FunctionTableNode }
 
 trait MyPostgresDriver extends PostgresDriver with PgArraySupport {
 
@@ -39,10 +39,10 @@ trait MyPostgresDriver extends PostgresDriver with PgArraySupport {
 
   class QueryBuilderEx(tree: Node, state: CompilerState) extends QueryBuilder(tree, state) {
     override protected def toComprehension(n: Node, liftExpression: Boolean): Comprehension = n match {
-      case t: FunctionTableNode => Comprehension(from = Seq(newSym -> t))
-      case s: SampleUnion => Comprehension(from = Seq(newSym -> s))
-      case wt: WithNode => Comprehension(from = Seq(newSym -> wt))
-      case _ => super.toComprehension(n, liftExpression)
+      case t: FunctionTableNode ⇒ Comprehension(from = Seq(newSym -> t))
+      case s: SampleUnion ⇒ Comprehension(from = Seq(newSym -> s))
+      case wt: WithNode ⇒ Comprehension(from = Seq(newSym -> wt))
+      case _ ⇒ super.toComprehension(n, liftExpression)
     }
 
     override protected def buildComprehension(c: Comprehension): Unit = {
@@ -64,21 +64,21 @@ trait MyPostgresDriver extends PostgresDriver with PgArraySupport {
     }
 
     override protected def buildFrom(n: Node, alias: Option[Symbol], skipParens: Boolean): Unit = building(FromPart) {
-      def addAlias = alias foreach { s => b += ' ' += symbolName(s)}
+      def addAlias = alias foreach { s ⇒ b += ' ' += symbolName(s) }
       n match {
-        case su: SampleUnion => {
+        case su: SampleUnion ⇒ {
           buildComprehension(su.left.asInstanceOf[Comprehension])
           b" union "
           buildComprehension(su.right.asInstanceOf[Comprehension])
         }
-        case t: FunctionTableNode => {
+        case t: FunctionTableNode ⇒ {
           b += quoteFunctionTableName(t)
           b"${t.openParens}"
           b.sep(t.argNode, ", ")(expr(_, true))
           b"${t.closeParens}"
           addAlias
         }
-        case w: WithNode => {
+        case w: WithNode ⇒ {
           b"(with " // pair 1
           if (w.recursive)
             b"recursive "
@@ -106,20 +106,20 @@ trait MyPostgresDriver extends PostgresDriver with PgArraySupport {
           b")" // pair 1
           addAlias
         }
-        case _ => super.buildFrom(n, alias, skipParens)
+        case _ ⇒ super.buildFrom(n, alias, skipParens)
       }
     }
 
     // 이것은 SqlUtilsComponent 에 들어가면 된다.
     // 원본 method 의 위치를 참고하기.
     protected def quoteFunctionTableName(t: FunctionTableNode): String = t.schemaName match {
-      case Some(s) => {
+      case Some(s) ⇒ {
         if (t.quote)
           quoteIdentifier(s) + "." + quoteIdentifier(t.tableName)
         else
           s + "." + t.tableName
       }
-      case None => {
+      case None ⇒ {
         if (t.quote)
           quoteIdentifier(t.tableName)
         else
@@ -131,7 +131,7 @@ trait MyPostgresDriver extends PostgresDriver with PgArraySupport {
       if (from.isEmpty)
         throw new SlickException("")
       b" "
-      b.sep(from, ", ") { case (sym, n) => buildFrom(n, Some(sym))}
+      b.sep(from, ", ") { case (sym, n) ⇒ buildFrom(n, Some(sym)) }
     }
 
     protected def buildWithClauseColumns(c: TableExpansion) = building(SelectPart) {
@@ -140,15 +140,15 @@ trait MyPostgresDriver extends PostgresDriver with PgArraySupport {
       // so this method is needed to just write column's name.
       // And, if c is Comprehension's instance, we can't know Table information.
       c.columns.nodeChildren.head match {
-        case ProductNode(ch) => {
+        case ProductNode(ch) ⇒ {
           if (ch.isEmpty)
             throw new SlickException("")
           b.sep(ch, ", ") {
-            case Path(field :: _) => b += symbolName(field)
+            case Path(field :: _) ⇒ b += symbolName(field)
           }
         }
-        case Path(field :: _) => b += symbolName(field)
-        case _ => {
+        case Path(field :: _) ⇒ b += symbolName(field)
+        case _ ⇒ {
           // It is not intended case. What happened?
           throw new SlickException("only for with clause")
         }

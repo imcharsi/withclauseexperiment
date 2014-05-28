@@ -15,7 +15,7 @@
  */
 package com.github.imcharsi.slick.model
 
-import com.github.imcharsi.slick.{MapperTrait, DriverSetting}
+import com.github.imcharsi.slick.{ MapperTrait, DriverSetting }
 import DriverSetting.driver._
 import com.github.imcharsi.slick.withclauseexperiment.NodeChangeableTableQuery
 
@@ -27,7 +27,7 @@ case class UnnestType(var x: Option[Int])
 class UnnestFunctionTable(tag: Tag) extends Table[UnnestType](tag, "generate_series") with MapperTrait {
   def unnest = column[Option[Int]]("unnest", O.NotNull)
 
-  override def * = (unnest) <>(UnnestType.apply, UnnestType.unapply)
+  override def * = (unnest) <> (UnnestType.apply, UnnestType.unapply)
 }
 
 object UnnestFunctionTable extends NodeChangeableTableQuery[UnnestFunctionTable](new UnnestFunctionTable(_))

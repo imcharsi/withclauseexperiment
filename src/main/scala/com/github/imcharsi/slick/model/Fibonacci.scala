@@ -33,7 +33,7 @@ class FibonacciTable(t: Tag) extends Table[FibonacciModel](t, "generate_series")
 
   def num = column[Option[Int]]("num")
 
-  override def * = (fibA, fibB, seed, num) <>(FibonacciModel.tupled, FibonacciModel.unapply)
+  override def * = (fibA, fibB, seed, num) <> (FibonacciModel.tupled, FibonacciModel.unapply)
 }
 
 object FibonacciTable extends NodeChangeableTableQuery[FibonacciTable](new FibonacciTable(_))

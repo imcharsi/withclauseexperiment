@@ -15,8 +15,8 @@
  */
 package com.github.imcharsi.slick.withclauseexperiment
 
-import scala.slick.ast.{Type, Node, SimplyTypedNode}
-import scala.slick.lifted.{WrappingQuery, Query}
+import scala.slick.ast.{ Type, Node, SimplyTypedNode }
+import scala.slick.lifted.{ WrappingQuery, Query }
 import scala.language.higherKinds
 
 /**

@@ -29,7 +29,7 @@ class FactorialTable(t: Tag) extends Table[FactorialModel](t, "generate_series")
 
   def num = column[Option[Int]]("num")
 
-  override def * = (fact, num) <>(FactorialModel.tupled, FactorialModel.unapply)
+  override def * = (fact, num) <> (FactorialModel.tupled, FactorialModel.unapply)
 }
 
 object FactorialTable extends NodeChangeableTableQuery[FactorialTable](new FactorialTable(_))

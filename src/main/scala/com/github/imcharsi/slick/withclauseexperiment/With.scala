@@ -15,7 +15,7 @@
  */
 package com.github.imcharsi.slick.withclauseexperiment
 
-import scala.slick.lifted.{WrappingQuery, Query, TableQuery, AbstractTable}
+import scala.slick.lifted.{ WrappingQuery, Query, TableQuery, AbstractTable }
 import scala.slick.ast._
 import scala.slick.SlickException
 import scala.language.higherKinds
@@ -48,7 +48,7 @@ trait With {
 object With extends With
 
 case class WithNode(val recursive: Boolean, val prevTableNodes: Seq[Node], val prevQueryNodes: Seq[Node],
-                    val tableNode: Node, val queryNode: Node, val mainQueryNode: Node) extends SimplyTypedNode {
+    val tableNode: Node, val queryNode: Node, val mainQueryNode: Node) extends SimplyTypedNode {
   override type Self = WithNode
 
   override protected def buildType: Type = mainQueryNode.nodeType

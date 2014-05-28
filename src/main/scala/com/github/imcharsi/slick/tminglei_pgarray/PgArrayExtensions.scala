@@ -1,9 +1,9 @@
 // copied from https://github.com/tminglei/slick-pg
 package com.github.imcharsi.slick.tminglei_pgarray
 
-import scala.slick.ast.Library.{SqlOperator, SqlFunction}
-import scala.slick.lifted.{LiteralColumn, ExtensionMethods, Column}
-import scala.slick.driver.{JdbcTypesComponent, PostgresDriver}
+import scala.slick.ast.Library.{ SqlOperator, SqlFunction }
+import scala.slick.lifted.{ LiteralColumn, ExtensionMethods, Column }
+import scala.slick.driver.{ JdbcTypesComponent, PostgresDriver }
 import scala.slick.jdbc.JdbcType
 
 trait PgArrayExtensions extends JdbcTypesComponent {
@@ -25,7 +25,7 @@ trait PgArrayExtensions extends JdbcTypesComponent {
 
   /** Extension methods for array Columns */
   class ArrayColumnExtensionMethods[B0, P1](val c: Column[P1])(
-    implicit tm0: JdbcType[B0], tm: JdbcType[List[B0]]) extends ExtensionMethods[List[B0], P1] {
+      implicit tm0: JdbcType[B0], tm: JdbcType[List[B0]]) extends ExtensionMethods[List[B0], P1] {
     /** required syntax: expression operator ANY (array expression) */
     def any[R](implicit om: o#to[B0, R]) = om.column(ArrayLibrary.Any, n)
 

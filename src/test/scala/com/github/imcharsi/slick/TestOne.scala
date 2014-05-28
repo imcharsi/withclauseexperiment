@@ -15,12 +15,12 @@
  */
 package com.github.imcharsi.slick
 
-import org.scalatest.{BeforeAndAfterEach, BeforeAndAfterAll, FlatSpec}
+import org.scalatest.{ BeforeAndAfterEach, BeforeAndAfterAll, FlatSpec }
 import DriverSetting.driver._
 import java.util.logging.Logger
 import scala.util.Try
 import scala.slick.lifted.SimpleFunction
-import com.github.imcharsi.slick.withclauseexperiment.{SampleUnion, With, FunctionTable}
+import com.github.imcharsi.slick.withclauseexperiment.{ SampleUnion, With, FunctionTable }
 import com.github.imcharsi.slick.model._
 import com.github.imcharsi.slick.model.ModelA
 
@@ -40,16 +40,16 @@ class TestOne extends FlatSpec with BeforeAndAfterAll with MapperTrait with Befo
     def fibonacciQuery(n: Column[Option[Int]]) = {
       val first = FunctionTable.
         binary(FibonacciTable, LiteralColumn(Option(1)), LiteralColumn(Option(1))).
-        map(t => (LiteralColumn(Option(0)), LiteralColumn(Option(0)), LiteralColumn(Option(1)), LiteralColumn(Option(1))))
+        map(t ⇒ (LiteralColumn(Option(0)), LiteralColumn(Option(0)), LiteralColumn(Option(1)), LiteralColumn(Option(1))))
       val withDeclarationFib = FibonacciTable.asWithDeclaration("fib")
       val second = withDeclarationFib.
-        filter(t => t.num < n).
-        map(t => (t.seed + t.fibA, t.fibA + t.fibB, t.fibA, t.num + 1))
-      With.recursive(withDeclarationFib, SampleUnion.sampleUnion(first, second)).mainQuery(withDeclarationFib.map(t => t.fibA))
+        filter(t ⇒ t.num < n).
+        map(t ⇒ (t.seed + t.fibA, t.fibA + t.fibB, t.fibA, t.num + 1))
+      With.recursive(withDeclarationFib, SampleUnion.sampleUnion(first, second)).mainQuery(withDeclarationFib.map(t ⇒ t.fibA))
     }
     val compiled = Compiled(fibonacciQuery _)
     val result = compiled.apply(Option(12)).run
-    result.foreach(x => logger.info(x.toString))
+    result.foreach(x ⇒ logger.info(x.toString))
   }
 
   // http://sqlwithmanoj.wordpress.com/2011/05/23/cte-recursion-sequence-dates-factorial-fibonacci-series/
@@ -57,26 +57,26 @@ class TestOne extends FlatSpec with BeforeAndAfterAll with MapperTrait with Befo
     def queryOne(o: Column[Option[Int]]) = {
       val first = FunctionTable.
         binary(FactorialTable, LiteralColumn(Option(1)), LiteralColumn(Option(1))).
-        map(t => (Option(1), Option(1)))
+        map(t ⇒ (Option(1), Option(1)))
       val withDeclarationFacto = FactorialTable.asWithDeclaration("facto")
       val second = withDeclarationFacto.
-        filter(t => t.num < o).
-        map(t => (t.fact * (t.num + 1), t.num + 1))
+        filter(t ⇒ t.num < o).
+        map(t ⇒ (t.fact * (t.num + 1), t.num + 1))
       With.recursive(withDeclarationFacto, SampleUnion.sampleUnion(first, second)).mainQuery(withDeclarationFacto)
     }
     val compiled = Compiled(queryOne _)
     val result = compiled.apply(Option(6)).run
-    result.foreach(x => logger.info(x.toString))
+    result.foreach(x ⇒ logger.info(x.toString))
   }
 
   "hierachical data".should("be ready").in {
-    for (i <- 1.to(4)) {
+    for (i ← 1.to(4)) {
       val a = ModelA(None, None, Option(f"root$i"))
       a.id = TableA.returning(TableA.map(_.id)).insert(a)
-      for (i2 <- 1.to(3)) {
+      for (i2 ← 1.to(3)) {
         val b = ModelA(None, a.id, Option(f"root$i-sub$i2"))
         b.id = TableA.returning(TableA.map(_.id)).insert(b)
-        for (i3 <- 1.to(2)) {
+        for (i3 ← 1.to(2)) {
           val c = ModelA(None, a.id, Option(f"root$i-sub$i2-sub$i3"))
           c.id = TableA.returning(TableA.map(_.id)).insert(c)
         }
@@ -111,7 +111,7 @@ class TestOne extends FlatSpec with BeforeAndAfterAll with MapperTrait with Befo
       }
       // real table.
       val step1 = TableA.
-        filter(t => t.parentId.isEmpty && t.name.like(o)).
+        filter(t ⇒ t.parentId.isEmpty && t.name.like(o)).
         map(mapOne)
       // synthetic table.
       val step2 = withDeclarationThree.
@@ -125,7 +125,7 @@ class TestOne extends FlatSpec with BeforeAndAfterAll with MapperTrait with Befo
     def queryForINparameter(o: Column[Option[String]]) = {
       FunctionTable.
         binary(UnnestFunctionTable, LiteralColumn(Option(1)), LiteralColumn(Option(1))). // we need something like oracle's dual.
-        map(t => unnest.apply(string_to_array.apply(o, LiteralColumn(",")).asColumnOf[Option[List[Int]]])) // this is postgres-specified feature.
+        map(t ⇒ unnest.apply(string_to_array.apply(o, LiteralColumn(",")).asColumnOf[Option[List[Int]]])) // this is postgres-specified feature.
     }
     def queryForMaster(p1: Column[Option[String]], p2: Column[Option[String]]) = {
       val nestedWithThatNothingToDo = With.
@@ -135,12 +135,12 @@ class TestOne extends FlatSpec with BeforeAndAfterAll with MapperTrait with Befo
         recursive(withDeclarationOne, queryForINparameter(p2)).
         append(withDeclarationTwo, nestedWithThatNothingToDo).
         append(withDeclarationThree, queryForHierachical(p1)).
-        mainQuery(withDeclarationThree.sortBy(t => t.odr))
+        mainQuery(withDeclarationThree.sortBy(t ⇒ t.odr))
     }
 
     val compiled = Compiled(queryForMaster _)
     val result = compiled.apply(Option("%"), Option("1,11,31")).run
-    result.foreach(x => logger.info(x.toString))
+    result.foreach(x ⇒ logger.info(x.toString))
   }
 
   implicit var session: Session = _
